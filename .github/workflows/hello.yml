@@ -5,25 +5,28 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  python-ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: '18'  
+          python-version: "3.11"
 
-      - name: Check Node version
-        run: node -v
+      - name: Check Python version
+        run: python --version
       
-      - name: Install Dependencies
-        run: npm install
+      - name: Simulate Dependencies 
+        run: echo "Installing dependencies..."
 
-      - name: Run Tests
-        run: npm test  
+      - name: Simulate Tests
+        run: echo "Running Python app..." 
+
+      - name: Print Test
+        run: python -c "print('Hello from Python')"
       
       - name: Print System Info
         run: uname -a
