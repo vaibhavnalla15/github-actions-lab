@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps: 
       - run: echo "Hi"
-      - run: ehco "I am"
+      - run: echo "I am"
       - run: echo "Jhon Wick"
       - run: echo "They call me BabaYaga!!!"
       - run: echo "Yeah!!!"
