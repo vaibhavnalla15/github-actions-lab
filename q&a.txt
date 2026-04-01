@@ -1,0 +1,145 @@
+Q. Why is this required? 
+    uses: actions/checkout@v4
+==> It clones the repository into the runner so workflow steps can access code. Without it, commands that depend on repo files will fail.
+===================================================================================================================================================================
+
+Q. What happens if you remove setup-python but still run: python --version
+==> It may NOT fail immediately, but:
+    - You lose control over Python version
+    - Your pipeline becomes unreliable
+    - Different runners may behave differently
+===================================================================================================================================================================
+
+Q. Why do we use:
+    with:
+      python-version: "3.11"
+==> It ensures a consistent, controlled runtime environment.
+    Without it:
+    - Different runs may use different Python versions
+    - Bugs become unpredictable
+===================================================================================================================================================================
+
+Q. What does runs-on: ubuntu-latest actually mean?
+==> GitHub provisions a fresh virtual machine (runner) with Ubuntu OS. Each job runs in an isolated environment that is destroyed after execution.
+===================================================================================================================================================================
+
+Q. Why did your pipeline fail with ModuleNotFoundError?
+==> Because dependencies were not installed in the CI environment. I need to add a step to install them using pip before running the application.
+===================================================================================================================================================================
+
+Q. Difference between uses: and run:
+==> uses: → Executes a reusable action (pre-built logic from a repository)
+    run:  → Executes shell commands directly inside the runner (VM)
+    
+===================================================================================================================================================================
+
+Q. Why do we always use actions/checkout?
+==> It clones the repository into the runner so the workflow can access project files. Without it, the runner has no code to work with.
+
+===================================================================================================================================================================
+
+Q. What happens if indentation is wrong in YAML?
+==> YAML is whitespace-sensitive. Wrong indentation breaks the structure, causing the workflow to fail parsing or execute incorrectly.
+
+===================================================================================================================================================================
+Q. Why is CI environment different from your laptop?
+==> CI runs in a fresh, stateless environment every time. No previous data, dependencies, or configurations exist. This ensures consistency and prevents “it works on my machine” issues.
+
+===================================================================================================================================================================
+Q. Why did your pipeline hang?
+ Scenario:
+
+yaml
+ name: Run App
+  run: python app.py
+
+Flask app:
+
+python
+app.run()
+
+==> Because Flask starts a longrunning server that never exits. CI pipelines expect tasks to complete, so the workflow hangs indefinitely.
+===================================================================================================================================================================
+
+Q. What should CI pipelines do vs NOT do?
+==> 
+CI should:
+ Build the application
+ Install dependencies
+ Run tests or validations
+
+CI should NOT:
+ Run longlived services (like web servers)
+ Wait indefinitely for requests
+===================================================================================================================================================================
+
+Q. What is the correct way to validate a Python app in CI?
+==>
+ name: Validate App
+  run: python c "import app"
+
+This checks if the app loads without errors instead of running a server.
+===================================================================================================================================================================
+
+Q. What happens inside the runner when you execute python app.py?
+==> 
+The runner starts executing the Python script.
+If the script contains a server (like Flask), it keeps running and never exits,
+blocking the pipeline from completing.
+===================================================================================================================================================================
+
+Q.Why is CI called a “stateless environment”?
+==>
+Because each run starts with a fresh environment.
+No previous data, installed packages, or processes are retained between runs.
+===================================================================================================================================================================
+
+Q.What is the difference between these two?
+run: python app.py
+vs
+run: python c "import app"
+==>
+python app.py:
+ Executes the full application
+ May start servers or longrunning processes
+
+python c "import app":
+ Only loads the module
+ Validates code without running the application
+===================================================================================================================================================================
+
+Q.Real Debug Scenario
+Error:
+ModuleNotFoundError: No module named 'flask'
+==>
+Cause:
+Flask dependency is not installed in the CI environment
+
+Fix:
+Add dependency installation step:
+pip install r requirements.txt
+===================================================================================================================================================================
+
+Q.YAML Logic Check
+Which is correct order?
+A. Run app
+B. Install dependencies
+C. Setup Python
+D. Checkout code
+==>
+D → C → B → A
+
+Checkout → Setup → Install → Run
+===================================================================================================================================================================
+
+Q.Why do we use requirements.txt in CI?
+==>
+To ensure all required dependencies are installed in the runner,
+creating a consistent and reproducible environment.
+===================================================================================================================================================================
+
+Q.What will happen if you skip actions/checkout?
+==> 
+The runner will not have access to your repository files,
+so commands like python app.py or pip install r requirements.txt will fail.
+===================================================================================================================================================================
