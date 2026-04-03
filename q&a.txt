@@ -143,3 +143,22 @@ Q.What will happen if you skip actions/checkout?
 The runner will not have access to your repository files,
 so commands like python app.py or pip install r requirements.txt will fail.
 ===================================================================================================================================================================
+
+Q. What is the difference between Repository-Level and Environment-Level secrets/variables?
+==> Repository-Level is global to the entire project (all branches/workflows). Environment-Level is specific to a deployment stage (like Prod or Dev) and only accessible if the job explicitly targets that environment.
+===================================================================================================================================================================
+
+Q. When should you use Repository-level settings over Environment-level?
+==> Use them for tools or configurations that remain the same across all stages, such as a Slack notification webhook, a Docker Hub username, or a global application name.
+===================================================================================================================================================================
+
+Q. What is the main security benefit of using Environment-level secrets?
+==> It allows you to set Deployment Protection Rules, such as requiring a manual approval from a lead developer or restricting access to specific branches (like main) before the secrets are decrypted.
+===================================================================================================================================================================
+
+Q. What happens if a secret name exists at both the Repository and Environment level?
+==> GitHub uses Precedence: The Environment-level secret will override the Repository-level secret. This allows you to use the same variable name (e.g., DB_URL) while pulling different values for different stages.
+===================================================================================================================================================================
+
+Q. What happens if a job tries to access an Environment secret without the environment keyword?
+==> The job will fail to find the secret (or fall back to a Repository-level one if it exists). Environment secrets are strictly gated and only "unlocked" when the environment: <name> property is declared in the YAML.
