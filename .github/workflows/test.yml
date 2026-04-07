@@ -3,7 +3,7 @@ name: Python CI Pipeline
 on:
   push:
     paths: 
-      - 'level-1/**'
+      - 'level-1/**' 
 
 jobs:
   python-ci:
