@@ -2,6 +2,8 @@ name: Level 2 YAML
 
 on: 
   push: 
+    branches:
+      - main
     paths: 
       - 'level-2/**'
 
