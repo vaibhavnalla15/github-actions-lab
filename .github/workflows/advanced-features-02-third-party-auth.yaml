@@ -1,0 +1,33 @@
+name: Third Party Auth
+on:
+  workflow_dispatch:
+
+jobs:
+  # ❌ PLEASE DO NOT USE THIS APPROACH!
+  auth-to-aws-static:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: "Configure AWS Credentials using static key"
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: Fetch the caller identity
+        run: aws sts get-caller-identity
+           
+   # ✅ PLEASE USE THIS APPROACH!
+  auth-to-aws-oidc:
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write  # This is required for requesting the JWT for OIDC auth to AWS
+    steps:
+      - name: "Configure AWS Credentials - Action for GitHub Actions"
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+
+      - name: Fetch the caller identity
+        run: aws sts get-caller-identity
