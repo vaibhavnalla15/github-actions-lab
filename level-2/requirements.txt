@@ -1,1 +1,1 @@
-pytest
+pytest  # installs pytest in runner
