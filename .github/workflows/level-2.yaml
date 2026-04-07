@@ -1,4 +1,4 @@
-name: Level 2 
+name: Level 2 YAML
 
 on: 
   push: 
@@ -28,4 +28,3 @@ jobs:
 
       - name: Run Tests
         run: pytest
-        
