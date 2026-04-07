@@ -1,0 +1,31 @@
+name: Level 2 
+
+on: 
+  push: 
+    paths: 
+      - 'level-2/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+        
+      - name: Print Message
+        run: echo "This is final level-2 workflow"
+
+      - name: Run Tests
+        run: pytest
+        
