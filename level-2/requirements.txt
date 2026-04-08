@@ -1,1 +1,1 @@
-pytest  # installs pytest in runner
+pytest  # installs pytest in ubuntu-latest runner
