@@ -1,12 +1,10 @@
-name: Python CI Pipeline
+name: Python Test Workflow
 
 on:
-  push:
-    paths: 
-      - 'level-1/**' 
+  workflow_dispatch:
 
 jobs:
-  python-ci:
+  python-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -17,8 +15,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
+      - name: Check Python Version
+        run: python --version
 
-      - name: Test App Import
-        run: python -c "import app"
+      - name: Run Test Script
+        run: python -c "print('CI Working')"

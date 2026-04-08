@@ -1,0 +1,20 @@
+name: My First Workflow
+
+on:
+  workflow_dispatch: 
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print CI Start Message
+        run: echo "Starting CI"
+
+      - name: Print Step 1
+        run: echo "Step 1 running"
+
+      - name: Print Step 2
+        run: echo "Step 2 running"
+
+      - name: Print System Info
+        run: uname -a
