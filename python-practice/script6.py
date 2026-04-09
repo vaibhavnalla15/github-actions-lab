@@ -1,12 +1,8 @@
 import os
 import sys
 
-# Define the relative path to the file
-file_path = os.path.join("README.md")
-
-# Check if the file exists 
-if os.path.exists(file_path):
-    print(f"Success: {file_path} is present.")
-else:
-    print(f"Error: {file_path} not found.")
+if not os.path.exists("README.md"):
+    print("Missing README.md")
     sys.exit(1)
+
+print("File exists")
