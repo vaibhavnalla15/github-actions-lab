@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'python-practice/**'
-      - '.github/workflows/python-practice.yml'
+      - '.github/workflows/python-practice.yaml'
 
 jobs:
   run-python:
