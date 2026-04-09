@@ -2,7 +2,7 @@ import os
 import sys
 
 # Define the relative path to the file
-file_path ="./README.md"
+file_path ="/README.md"
 
 # Check if the file exists 
 if os.path.exists(file_path):
