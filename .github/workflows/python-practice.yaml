@@ -40,6 +40,8 @@ jobs:
 
       - name: Run Script 5
         run: python script5.py || echo "script5 failed" >> errors.log
+        env:
+          APP_ENV: production
 
       - name: Run Script 6
         run: python script6.py || echo "script6 failed" >> errors.log
@@ -53,6 +55,7 @@ jobs:
         run: python script8.py || echo "script8 failed" >> errors.log
         env:
           API_KEY: API7890 
+          APP_ENV: production
 
       - name: Final Check
         run: |
