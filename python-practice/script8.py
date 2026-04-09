@@ -8,8 +8,8 @@ if env != "production":
     print("Invalid env")
     sys.exit(1)
 
-if not os.path.exists("requirements.txt"):
-    print("Missing requirements.txt")
+if not os.path.exists("README.md"):
+    print("Missing README.md")
     sys.exit(1)
 
 if not api_key:

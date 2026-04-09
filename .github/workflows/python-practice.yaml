@@ -44,6 +44,7 @@ jobs:
           APP_ENV: production
 
       - name: Run Script 6
+        working-directory: ./README.md
         run: python script6.py || echo "script6 failed" >> errors.log
       
       - name: Run Script 7
