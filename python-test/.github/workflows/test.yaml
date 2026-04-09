@@ -1,0 +1,16 @@
+name: TEST YAML
+
+on:
+  push:
+    paths:
+      - "python-test/**"
+
+jobs:
+  test-python:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: python-test
+    steps:
+      - run: python test.py
