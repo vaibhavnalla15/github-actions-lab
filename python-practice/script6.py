@@ -1,8 +1,8 @@
 import os
 import sys
 
-if not os.path.exists("README.md"):
+if os.path.exists("README.md"):
+    print("File exists")
+else:
     print("Missing README.md")
     sys.exit(1)
-
-print("File exists")

@@ -8,7 +8,9 @@ if env != "production":
     print("Invalid env")
     sys.exit(1)
 
-if not os.path.exists("README.md"): # Check for README.md
+if os.path.exists("README.md"):
+    print("File exists")
+else:
     print("Missing README.md")
     sys.exit(1)
 
