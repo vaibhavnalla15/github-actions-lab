@@ -1,6 +1,6 @@
 import sys
 
-num = -2 
+num = -4
 
 if num < 0:
     print("Negative numer detected")
