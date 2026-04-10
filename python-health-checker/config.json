@@ -1,0 +1,6 @@
+{
+    "required_env": "production",
+    "required_files": ["requirements.txt", "config.json"],
+    "api_url": "https://example.com/health"
+  }
+  
