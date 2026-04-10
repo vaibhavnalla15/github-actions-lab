@@ -1,6 +1,6 @@
 {
     "required_env": "production",
-    "required_files": ["./python-health-checker/requirements.txt", "./python-health-checker/config.json"],
+    "required_files": ["requirements.txt", "config.json"],
     "api_url": "https://httpbin.org/status/200"
   }
   
