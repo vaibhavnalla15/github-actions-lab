@@ -4,7 +4,7 @@ import json
 import requests
 
 def load_config():
-    with open("./python-health-checker/config.json") as f:
+    with open("config.json") as f:
         return json.load(f)
 
 def check_env(expected_env):
