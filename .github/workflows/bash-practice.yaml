@@ -35,3 +35,6 @@ jobs:
         run: ./script4.sh
         env:  
           APP_ENV: production
+      
+      - name: Run Script 5
+        run: ./script5.sh
