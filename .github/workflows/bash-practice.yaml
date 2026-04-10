@@ -1,0 +1,37 @@
+name: Bash Practice CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'bash-practice/**'
+      - .github/workflows/bash-practice.yaml'
+    
+  workflow_dispatch:
+    
+jobs:
+  bash-run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bash-practice
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Give execute permission
+        run: chmod +x *.sh
+
+      - name: Run Script 1
+        run: ./script1.sh
+
+      - name: Run Script 2
+        run: ./script2.sh
+
+      - name: Run Script 3
+        run: ./script3.sh
+
+      - name: Run Script 4
+        run: ./script4.sh
+        env:  
+          APP_ENV: production
