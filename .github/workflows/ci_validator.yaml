@@ -1,0 +1,30 @@
+name: Bash CI Validator
+
+on:
+  push: 
+    branches: [main]
+    paths:
+      - 'bash-practice/**'
+      - '.github/workflows/ci_validator.yaml'
+
+  workflow_dispatch: 
+
+jobs:
+  bash-ci-validator:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bash-practice
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Give execute permission
+        run: chmod +x *.sh
+
+      - name: Run Bash CI Validator
+        run: ./ ci_validator.sh
+        env:
+          APP_ENV: production
+          API_KEY: ${{ secrets.API_KEY }}
+
