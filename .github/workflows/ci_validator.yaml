@@ -23,7 +23,7 @@ jobs:
         run: chmod +x *.sh
 
       - name: Run Bash CI Validator
-        run: ./ ci_validator.sh
+        run: ./ci_validator.sh
         env:
           APP_ENV: production
           API_KEY: ${{ secrets.API_KEY }}
