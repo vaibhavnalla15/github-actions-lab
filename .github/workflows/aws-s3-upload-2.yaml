@@ -1,0 +1,72 @@
+name: AWS S3 Upload
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'level-4/**'
+      - '.github/workflows/aws-s3-upload-2.yaml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: level-4
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+        
+      - name: Upload Multiple files to S3 Bucket
+        run: |
+          aws s3 cp test1.txt s3://${{ secrets.S3_BUCKET}}/test1.txt 
+          aws s3 cp test2.txt s3://${{ secrets.S3_BUCKET}}/test2.txt 
+
+      - name: Upload a Folder
+        run: |
+          aws s3 cp assets/ s3://${{ secrets.S3_BUCKET}}/assets/ --recursive
+
+      - name: Sync Files
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET}}/app/
+
+      - name: Conditionl Upload
+        run: |
+          if [ -f ../README.md ]; then
+            aws s3 cp ../README.md s3://${{ secrets.S3_BUCKET}}/README.md
+          else
+            echo "File not Found."
+          fi
+
+      - name: Verify Upload
+        run: |
+          aws s3 ls s3://${{ secrets.S3_BUCKET }}/README.md || exit 1
+
+      - name: List Files only with .txt
+        run: |
+          aws s3 ls s3://${{ secrets.S3_BUCKET}}/ | grep ".txt"
+
+      - name: Upload with timestamp
+        run: |
+          TIMESTAMP=$(date +%s)
+          aws s3 cp demo.txt s3://${{ secrets.S3_BUCKET}}/demo-$TIMESTAMP.txt
+
+      - name: Deploy App
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET}}/prod/ --delete
+ 
+          
+      - name: Verify upload
+        run: |
+         aws s3 ls s3://${{ secrets.S3_BUCKET}}/ --recursive
+
+      
