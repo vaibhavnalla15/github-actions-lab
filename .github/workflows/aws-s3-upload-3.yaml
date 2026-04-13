@@ -1,11 +1,6 @@
 name: AWS S3 Upload-3
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'level-4/**'
-      - '.github/workflows/aws-s3-upload-3.yaml'
   workflow_dispatch:
 
 jobs:
@@ -29,7 +24,7 @@ jobs:
       - name: Versioned Upload
         run: |
           TIMESTAMP=$(date +%Y%M%D-%H%M%S)
-          aws s3 qna.txt s3://${{ secrets.S3_BUCKET }}/releases/qna-$TIMESTAMP.txt
+          aws s3 cp qna.txt s3://${{ secrets.S3_BUCKET }}/releases/qna-$TIMESTAMP.txt
       
       - name: Blue Deployment
         run: |
@@ -85,11 +80,23 @@ jobs:
   job-app:
     runs-on: ubuntu-latest
     steps:
-      - run: aws s3 sync assets/ s3://${{ secrets.S3_BUCKET }}/assets/
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: List files
+        run: ls -R  
+
+      # - run: aws s3 sync assets/ s3://${{ secrets.S3_BUCKET }}/assets/
 
   job-logs:
     runs-on: ubuntu-latest
     steps:
-      - run: aws s3 sync logs/ s3://${{ secrets.S3_BUCKET }}/logs/
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: List files
+        run: ls -R
+
+      # - run: aws s3 sync logs/ s3://${{ secrets.S3_BUCKET }}/logs/
 
       
