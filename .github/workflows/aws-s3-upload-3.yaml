@@ -2,7 +2,11 @@ name: AWS S3 Upload-3
 
 on:
   workflow_dispatch:
-
+  push:
+    paths:
+      - 'level-4/**'
+      - '.github/workflows/aws-s3-upload-3.yaml'
+    
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -36,7 +40,7 @@ jobs:
 
       - name: Smart Deploy
         run: |
-          aws s3 sync .s3://${{ secrets.S3_BUCKET }}/app/ --exclude "qna.txt"
+          aws s3 sync . s3://${{ secrets.S3_BUCKET }}/app/ --exclude "qna.txt"
       
       - name: Backup Existing
         run: |
