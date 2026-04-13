@@ -85,26 +85,34 @@ jobs:
           echo "Deployment completed at $(date)"
           aws s3 ls s3://${{ secrets.S3_BUCKET }}/prod/
 
-  # job-app:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v4
+  job-app:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: level-4
 
-  #     - name: List files
-  #       run: ls -R  
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-  #     # - run: aws s3 sync assets/ s3://${{ secrets.S3_BUCKET }}/assets/
+      - name: List files
+        run: ls -R  
 
-  # job-logs:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v4
+      # - run: aws s3 sync assets/ s3://${{ secrets.S3_BUCKET }}/assets/
 
-  #     - name: List files
-  #       run: ls -R 
+  job-logs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: level-4
+        
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-  #     # - run: aws s3 sync logs/ s3://${{ secrets.S3_BUCKET }}/logs/
+      - name: List files
+        run: ls -R 
+
+      # - run: aws s3 sync logs/ s3://${{ secrets.S3_BUCKET }}/logs/
 
       
