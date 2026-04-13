@@ -1,0 +1,95 @@
+name: AWS S3 Upload-3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'level-4/**'
+      - '.github/workflows/aws-s3-upload-3.yaml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: level-4
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Versioned Upload
+        run: |
+          TIMESTAMP=$(date +%Y%M%D-%H%M%S)
+          aws s3 qna.txt s3://${{ secrets.S3_BUCKET }}/releases/qna-$TIMESTAMP.txt
+      
+      - name: Blue Deployment
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET }}/blue/ --delete
+
+      - name: Green Deployment
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET }}/green/ --delete
+
+      - name: Smart Deploy
+        run: |
+          aws s3 sync .s3://${{ secrets.S3_BUCKET }}/app/ --exclude "qna.txt"
+      
+      - name: Backup Existing
+        run: |
+          aws s3 sync s3://${{ secrets.S3_BUCKET }}/app/ s3://${{ secrets.S3_BUCKET }}/backup/
+
+      - name: Deploy New Version
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET }}/app/ --delete
+
+      # Multi-Environment Deploy
+      - name: Deploy Only Main
+        if: github.ref == 'refs/heads/main'
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET }}/prod/
+
+      - name: Deploy Dev
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET }}/dev/
+
+      - name: Deploy Prod
+        if: github.ref == 'refs/heads/main'
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET }}/prod/
+
+      - name: Verify Deployment
+        run: |
+          COUNT=$(aws s3 ls s3://${{ secrets.S3_BUCKET }}/prod/ | wc -l)
+
+          if [ $COUNT -eq 0]; then
+            echo "Deployment Failed"
+            exit 1
+          else
+            echo "Deployment Success"
+      
+      - name: Deployment Summary
+        run: |
+          echo "Deployment completed at $(date)"
+          aws s3 ls s3://${{ secrets.S3_BUCKET }}/prod/
+
+  job-app:
+    runs-on: ubuntu-latest
+    steps:
+      - run: aws s3 sync assets/ s3://${{ secrets.S3_BUCKET }}/assets/
+
+  job-logs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: aws s3 sync logs/ s3://${{ secrets.S3_BUCKET }}/logs/
+
+      
