@@ -1,0 +1,43 @@
+name: Artifact Demo
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'artifact-demo/**'
+      - '.github/workflows/artifact.yaml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: artifact-demo
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create Build File
+        run: |
+          echo "This is build output" > build.txt
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: build-file
+          path: build.txt
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4.1.9
+        with:
+          name: build-file
+
+      - name: Show File
+        run: cat build.txt
